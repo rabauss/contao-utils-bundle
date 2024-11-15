@@ -6,7 +6,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Image;
 use Contao\StringUtil;
 use HeimrichHannot\UtilsBundle\Util\Html\HtmlUtil;
-use HeimrichHannot\UtilsBundle\Util\Routing\RoutingUtil;
 use HeimrichHannot\UtilsBundle\Util\Ui\PopupWizardLinkOptions;
 
 class BackendUiUtil
