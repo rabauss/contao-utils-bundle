@@ -6,7 +6,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Image;
 use HeimrichHannot\UtilsBundle\Tests\AbstractUtilsTestCase;
 use HeimrichHannot\UtilsBundle\Util\BackendUiUtil;
-use HeimrichHannot\UtilsBundle\Util\Html\HtmlUtil;
+use HeimrichHannot\UtilsBundle\Util\HtmlUtil;
 use HeimrichHannot\UtilsBundle\Util\RoutingUtil;
 use HeimrichHannot\UtilsBundle\Util\Ui\PopupWizardLinkOptions;
 use PHPUnit\Framework\MockObject\MockBuilder;
@@ -26,7 +26,9 @@ class BackendUiUtilTest extends AbstractUtilsTestCase
     public function testPopupWizardLinkReturnsCorrectUrlOnly()
     {
         $routingUtil = $this->createMock(RoutingUtil::class);
-        $routingUtil->method('generateBackendRoute')->willReturnArgument(3);
+        $routingUtil->method('generateBackendRoute')->willReturnCallback(function (array $params, bool $addToken = true, bool $addReferer = true, array $options = []) {
+            return $options['route'] ?? 'contao_backend';
+        });
 
         $backendUiUtil = $this->getTestInstance(['routingUtil' => $routingUtil]);
 

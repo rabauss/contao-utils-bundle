@@ -5,7 +5,6 @@ namespace HeimrichHannot\UtilsBundle\Util;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Image;
 use Contao\StringUtil;
-use HeimrichHannot\UtilsBundle\Util\Html\HtmlUtil;
 use HeimrichHannot\UtilsBundle\Util\Ui\PopupWizardLinkOptions;
 
 class BackendUiUtil
@@ -27,7 +26,7 @@ class BackendUiUtil
         $parameter['popup'] = 1;
         $parameter['nb'] = 1;
 
-        $url = $this->routingUtil->generateBackendRoute($parameter, true, true, $options->route);
+        $url = $this->routingUtil->generateBackendRoute($parameter, true, true, ['route' => $options->route]);
         if ($options->urlOnly) {
             return $url;
         }
