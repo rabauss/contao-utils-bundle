@@ -41,6 +41,11 @@ class Utils implements ServiceSubscriberInterface
         return $this->locator->get(ArrayUtil::class);
     }
 
+    public function backendUi(): BackendUiUtil
+    {
+        return $this->locator->get(BackendUiUtil::class);
+    }
+
     public function class(): ClassUtil
     {
         return $this->locator->get(ClassUtil::class);
@@ -117,6 +122,7 @@ class Utils implements ServiceSubscriberInterface
             AccordionUtil::class,
             AnonymizeUtil::class,
             ArrayUtil::class,
+            BackendUiUtil::class,
             ClassUtil::class,
             ContainerUtil::class,
             DatabaseUtil::class,

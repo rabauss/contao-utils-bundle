@@ -12,6 +12,7 @@ use Contao\TestCase\ContaoTestCase;
 use HeimrichHannot\UtilsBundle\Util\AccordionUtil;
 use HeimrichHannot\UtilsBundle\Util\AnonymizeUtil;
 use HeimrichHannot\UtilsBundle\Util\ArrayUtil;
+use HeimrichHannot\UtilsBundle\Util\BackendUiUtil;
 use HeimrichHannot\UtilsBundle\Util\ClassUtil;
 use HeimrichHannot\UtilsBundle\Util\ContainerUtil;
 use HeimrichHannot\UtilsBundle\Util\DatabaseUtil;
@@ -46,8 +47,8 @@ class UtilsTest extends ContaoTestCase
                     case ArrayUtil::class:
                         return $this->createMock(ArrayUtil::class);
 
-                    case ClassUtil::class:
-                        return $this->createMock(ClassUtil::class);
+                    case BackendUiUtil::class:
+                        return $this->createMock(BackendUiUtil::class);
 
                     case ContainerUtil::class:
                         return $this->createMock(ContainerUtil::class);
@@ -108,6 +109,11 @@ class UtilsTest extends ContaoTestCase
     public function testArray()
     {
         $this->assertInstanceOf(ArrayUtil::class, $this->getTestInstance()->array());
+    }
+
+    public function testBackendUi()
+    {
+        $this->assertInstanceOf(BackendUiUtil::class, $this->getTestInstance()->backendUi());
     }
 
     public function testContainer()
