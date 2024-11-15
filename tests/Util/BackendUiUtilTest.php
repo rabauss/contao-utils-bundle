@@ -7,7 +7,7 @@ use Contao\Image;
 use HeimrichHannot\UtilsBundle\Tests\AbstractUtilsTestCase;
 use HeimrichHannot\UtilsBundle\Util\BackendUiUtil;
 use HeimrichHannot\UtilsBundle\Util\Html\HtmlUtil;
-use HeimrichHannot\UtilsBundle\Util\Routing\RoutingUtil;
+use HeimrichHannot\UtilsBundle\Util\RoutingUtil;
 use HeimrichHannot\UtilsBundle\Util\Ui\PopupWizardLinkOptions;
 use PHPUnit\Framework\MockObject\MockBuilder;
 

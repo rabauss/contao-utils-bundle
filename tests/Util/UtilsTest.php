@@ -50,6 +50,9 @@ class UtilsTest extends ContaoTestCase
                     case BackendUiUtil::class:
                         return $this->createMock(BackendUiUtil::class);
 
+                    case ClassUtil::class:
+                        return $this->createMock(ClassUtil::class);
+
                     case ContainerUtil::class:
                         return $this->createMock(ContainerUtil::class);
 
