@@ -11,19 +11,13 @@ use HeimrichHannot\UtilsBundle\Util\Ui\PopupWizardLinkOptions;
 
 class BackendUiUtil
 {
-    private RoutingUtil $routingUtil;
-    private ContaoFramework $framework;
-    private HtmlUtil $htmlUtil;
 
     public function __construct(
-        RoutingUtil     $routingUtil,
-        ContaoFramework $framework,
-        HtmlUtil        $htmlUtil
+        private readonly RoutingUtil     $routingUtil,
+        private readonly ContaoFramework $framework,
+        private readonly HtmlUtil $htmlUtil
     )
     {
-        $this->routingUtil = $routingUtil;
-        $this->framework = $framework;
-        $this->htmlUtil = $htmlUtil;
     }
 
     /**
