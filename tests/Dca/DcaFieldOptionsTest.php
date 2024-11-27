@@ -43,5 +43,12 @@ class DcaFieldOptionsTest extends TestCase
             ],
             $dcaFieldOptions->getEval()
         );
+
+        $dcaFieldOptions->setEvalValue('test_eval_1', 'test_value_single1');
+        $dcaFieldOptions->setEvalValue('test_eval_2', 'test_value_single2');
+        $dcaFieldOptions->setEvalValue('test_eval_3', 'test_value_single3');
+        $this->assertEquals('test_value_single1', $dcaFieldOptions->getEvalValue('test_eval_1'));
+        $this->assertEquals('test_value_single2', $dcaFieldOptions->getEvalValue('test_eval_2'));
+        $this->assertEquals('test_value_single3', $dcaFieldOptions->getEvalValue('test_eval_3'));
     }
 }
