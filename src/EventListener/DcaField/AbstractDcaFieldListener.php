@@ -48,6 +48,9 @@ abstract class AbstractDcaFieldListener implements ServiceSubscriberInterface
         }
     }
 
+    /**
+     * @codeCoverageIgnore Can't be tested due to nature of the method
+     */
     public static function getSubscribedServices(): array
     {
         return [
