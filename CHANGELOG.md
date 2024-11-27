@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.6.0] - 2024-11-27
+- Added: DcaFieldConfiguration can now set the field's eval options
+- Added: Unit test coverage
+
 ## [3.5.0] - 2024-11-15
 - Added: BackendUiUtil with popupWizardLink method ([#86](https://github.com/heimrichhannot/contao-utils-bundle/pull/86))
 
