@@ -9,14 +9,12 @@ class DcaFieldConfiguration
     protected bool $search = false;
     protected bool $filter = false;
     protected bool $sorting = false;
+    protected array $eval = [];
 
     /**
      * @param string $table
      */
-    public function __construct(private string $table)
-    {
-
-    }
+    public function __construct(private readonly string $table) {}
 
     public function getTable(): string
     {
@@ -76,5 +74,21 @@ class DcaFieldConfiguration
     {
         $this->filter = $filter;
         return $this;
+    }
+
+    public function setEvalValue(string $key, mixed $value): DcaFieldConfiguration
+    {
+        $this->eval[$key] = $value;
+        return $this;
+    }
+
+    public function getEvalValue(string $key): mixed
+    {
+        return $this->eval[$key] ?? null;
+    }
+
+    public function getEval(): array
+    {
+        return $this->eval;
     }
 }

@@ -48,11 +48,11 @@ class DateAddedFieldListenerTest extends TestCase
     public function dateAddedConfig():array
     {
         return [
-            [null, false, false, false, false],
-            [1, true, false, false, false],
-            [2, false, true, false, false],
-            [null, false, false, true, false],
-            [null, false, false, false, true],
+            [null, false, false, false, false, null],
+            [1, true, false, false, false, []],
+            [2, false, true, false, false, ['testProp' => 'testValue']],
+            [null, false, false, true, false, ['a' => 'x', 'b' => 'y', 'c' => 99]],
+            [null, false, false, false, true, ['noSubmissionField' => true]],
         ];
     }
 
@@ -60,8 +60,10 @@ class DateAddedFieldListenerTest extends TestCase
      * @dataProvider dateAddedConfig
      * @runInSeparateProcess
      */
-    public function testConfig(?int $flag, bool $sorting, bool $exclude, bool $filter, bool $search)
+    public function testConfig(?int $flag, bool $sorting, bool $exclude, bool $filter, bool $search, ?array $eval)
     {
+        $eval ??= [];
+
         $container = $this->createMock(ContainerInterface::class);
 
         $listener = new DateAddedFieldListener($container);
@@ -79,6 +81,9 @@ class DateAddedFieldListenerTest extends TestCase
         $config->setExclude($exclude);
         $config->setFilter($filter);
         $config->setSearch($search);
+        foreach ($eval as $key => $value) {
+            $config->setEvalValue($key, $value);
+        }
 
         $listener->onLoadDataContainer($table);
 
@@ -103,6 +108,14 @@ class DateAddedFieldListenerTest extends TestCase
         if ($search) {
             $this->assertArrayHasKey('search', $field);
             $this->assertTrue($field['search']);
+        }
+        if (!empty($eval)) {
+            $this->assertArrayHasKey('eval', $field);
+            $this->assertIsArray($field['eval']);
+            foreach ($eval as $key => $value) {
+                $this->assertArrayHasKey($key, $field['eval']);
+                $this->assertEquals($value, $field['eval'][$key]);
+            }
         }
     }
 

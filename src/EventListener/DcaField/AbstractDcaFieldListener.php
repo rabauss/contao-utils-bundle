@@ -21,7 +21,7 @@ abstract class AbstractDcaFieldListener implements ServiceSubscriberInterface
         return $framework->getAdapter($modelClass)->findByPk($id);
     }
 
-    protected function applyDefaultFieldAdjustments(array &$field, DcaFieldConfiguration $configuration)
+    protected function applyDefaultFieldAdjustments(array &$field, DcaFieldConfiguration $configuration): void
     {
         if ($configuration->isFilter()) {
             $field['filter'] = true;
@@ -42,8 +42,15 @@ abstract class AbstractDcaFieldListener implements ServiceSubscriberInterface
         if ($configuration->getFlag() !== null) {
             $field['flag'] = $configuration->getFlag();
         }
+
+        if (!empty($configuration->getEval())) {
+            $field['eval'] = \array_merge($field['eval'] ?? [], $configuration->getEval());
+        }
     }
 
+    /**
+     * @codeCoverageIgnore Can't be tested due to nature of the method
+     */
     public static function getSubscribedServices(): array
     {
         return [
