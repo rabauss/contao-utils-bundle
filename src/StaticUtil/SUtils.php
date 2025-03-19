@@ -21,7 +21,7 @@ class SUtils
      * @param class-string<T> $class
      * @return T The instance of the given class.
      */
-    protected static function getInstance(string $class): object
+    protected static function getInstance(string $class)
     {
         if (!isset(static::$instances[$class])) {
             static::$instances[$class] = new $class;

@@ -2,10 +2,10 @@ parameters:
   level: 2
   paths:
     - src
-    - tests
+#    - tests
   universalObjectCratesClasses:
 #    - Contao\LayoutModel
-#    - Contao\Model
+    - Contao\Model
 #    - Contao\Template
     - PHPUnit\Framework\MockObject\MockObject
 #  ignoreErrors:

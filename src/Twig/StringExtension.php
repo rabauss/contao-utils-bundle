@@ -23,9 +23,9 @@ class StringExtension extends AbstractExtension
     /**
      * Get list of twig filters.
      *
-     * @return array|\Twig_SimpleFilter[]
+     * @return array<TwigFilter> An array of filters
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('anonymize_email', [$this, 'anonymizeEmail']),
