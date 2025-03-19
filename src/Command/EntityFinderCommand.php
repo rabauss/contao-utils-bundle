@@ -19,6 +19,7 @@ use Contao\PageModel;
 use Contao\ThemeModel;
 use Doctrine\DBAL\Connection;
 use HeimrichHannot\UtilsBundle\EntityFinder\EntityFinderHelper;
+use HeimrichHannot\UtilsBundle\EntityFinder\Finder;
 use HeimrichHannot\UtilsBundle\Event\ExtendEntityFinderEvent;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -38,7 +39,9 @@ class EntityFinderCommand extends Command
         private ContaoFramework $contaoFramework,
         private EventDispatcherInterface $eventDispatcher,
         private Connection $connection,
-        private EntityFinderHelper $entityFinderHelper)
+        private EntityFinderHelper $entityFinderHelper,
+        private readonly Finder $finder,
+    )
     {
         parent::__construct();
     }
@@ -58,13 +61,8 @@ class EntityFinderCommand extends Command
 
         $io->title('Find entity');
 
-        if ($input->hasArgument('table') && $input->getArgument('table')) {
-            $table = $input->getArgument('table');
-        }
-
-        if ($input->hasArgument('id') && $input->getArgument('id')) {
-            $id = $input->getArgument('id');
-        }
+        $table = $input->getArgument('table');
+        $id = $input->getArgument('id');
 
         $result = $this->loop($table, $id);
         $this->output($io, [$result]);
@@ -84,7 +82,7 @@ class EntityFinderCommand extends Command
         $parents = [];
 
         $this->findEntity($table, $id, $parents);
-        $event = $this->runExtendEntityFinderEvent($table, $id, $parents);
+        $event = $this->runLegacyExtendEntityFinderEvent($table, $id, $parents);
 
         $this->findInserttags($event);
 
@@ -170,22 +168,6 @@ class EntityFinderCommand extends Command
 
                 return 'Article not found: ID '.$id;
 
-            case ModuleModel::getTable():
-                if ($onlyText) {
-                    Controller::loadLanguageFile('modules');
-                }
-                $element = ModuleModel::findByIdOrAlias($id);
-
-                if ($element) {
-                    if (!$onlyText) {
-                        $this->findFrontendModuleParents($element, $parents, $id);
-                    }
-
-                    return 'Frontend module: '.($GLOBALS['TL_LANG']['FMD'][$element->type][0] ?? $element->type).' (ID: '.$element->id.', Type: '.$element->type.')';
-                }
-
-                return 'Frontend module not found: ID '.$id;
-
             case LayoutModel::getTable():
                 $layout = LayoutModel::findById($id);
 
@@ -216,6 +198,20 @@ class EntityFinderCommand extends Command
                 return 'Page not found: ID '.$id;
         }
 
+        $element = $this->finder->find($table, $id);
+        if ($element) {
+            if ($onlyText) {
+                return $element->description;
+            }
+            if (null === $element->parents) {
+                return null;
+            }
+            foreach ($element->getParents() as $parent) {
+                $parents[] = ['table' => $parent['table'], 'id' => $parent['id']];
+            }
+            return null;
+        }
+
         return null;
     }
 
@@ -228,7 +224,7 @@ class EntityFinderCommand extends Command
         }
 
         /** @var ExtendEntityFinderEvent $event */
-        $event = $this->runExtendEntityFinderEvent($table, $id, [], true);
+        $event = $this->runLegacyExtendEntityFinderEvent($table, $id, [], true);
 
         if ($event->getOutput()) {
             return $event->getOutput();
@@ -237,54 +233,21 @@ class EntityFinderCommand extends Command
         return 'Unsupported entity: '.$table.' (ID: '.$id.')';
     }
 
-    private function runExtendEntityFinderEvent(string $table, $id, array $parents, bool $onlyText = false): ExtendEntityFinderEvent
+    private function runLegacyExtendEntityFinderEvent(string $table, $id, array $parents, bool $onlyText = false): ExtendEntityFinderEvent
     {
-        /* @var ExtendEntityFinderEvent $event */
-        if (is_subclass_of($this->eventDispatcher, 'Symfony\Contracts\EventDispatcher\EventDispatcherInterface')) {
-            $event = $this->eventDispatcher->dispatch(
-                new ExtendEntityFinderEvent($table, $id, $parents, [], $this->entityFinderHelper, $onlyText),
-                ExtendEntityFinderEvent::class
-            );
-        } else {
-            /** @noinspection PhpParamsInspection */
-            $event = $this->eventDispatcher->dispatch(
-                ExtendEntityFinderEvent::class,
-                new ExtendEntityFinderEvent($table, $id, $parents, [], $this->entityFinderHelper, $onlyText)
+
+        if ($this->eventDispatcher->hasListeners(ExtendEntityFinderEvent::class)) {
+            trigger_deprecation(
+                'heimrichhannot/contao-utils-bundle',
+                '3.7',
+                'Using the ExtendEntityFinderEvent is deprecated. Use EntityFinderFindEvent instead.'
             );
         }
+        $event = $this->eventDispatcher->dispatch(
+            new ExtendEntityFinderEvent($table, $id, $parents, [], $this->entityFinderHelper, $onlyText),
+        );
 
         return $event;
-    }
-
-    private function findFrontendModuleParents(ModuleModel $module, array &$parents): void
-    {
-        $contentelements = ContentModel::findBy(['tl_content.type=?', 'tl_content.module=?'], ['module', $module->id]);
-
-        if ($contentelements) {
-            foreach ($contentelements as $contentelement) {
-                $parents[] = ['table' => ContentModel::getTable(), 'id' => $contentelement->id];
-            }
-        }
-
-        $result = Database::getInstance()
-            ->prepare("SELECT id FROM tl_layout WHERE modules LIKE '%:\"".(string) ((int) $module->id)."\"%'")
-            ->execute();
-
-        foreach ($result->fetchEach('id') as $layoutId) {
-            $parents[] = ['table' => LayoutModel::getTable(), 'id' => $layoutId];
-        }
-
-        $result = Database::getInstance()
-            ->prepare("SELECT id FROM tl_module
-                        WHERE type='html'
-                        AND (
-                            html LIKE '%{{insert_module::".$module->id."}}%'
-                            OR html LIKE '%{{insert_module::".$module->id."::%')")
-            ->execute();
-
-        foreach ($result->fetchEach('id') as $moduleId) {
-            $parents[] = ['table' => ModuleModel::getTable(), 'id' => $moduleId];
-        }
     }
 
     private function findInserttags(ExtendEntityFinderEvent $event): void
