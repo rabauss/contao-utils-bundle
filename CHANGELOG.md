@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.7.0] - 2025-03-19
+- Changed: enhance entity finder with universal entity support fallback ([#93](https://github.com/heimrichhannot/contao-utils-bundle/pull/93))
+- Deprecated: ExtendEntityFinderEvent
+
 ## [3.6.0] - 2024-11-27
 - Added: DcaFieldConfiguration can now set the field's eval options
 - Added: Unit test coverage
