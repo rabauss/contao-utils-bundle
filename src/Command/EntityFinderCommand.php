@@ -35,10 +35,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class EntityFinderCommand extends Command
 {
     public function __construct(
-        private ContaoFramework $contaoFramework,
-        private EventDispatcherInterface $eventDispatcher,
-        private Connection $connection,
-        private EntityFinderHelper $entityFinderHelper,
+        private readonly ContaoFramework $contaoFramework,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly Connection $connection,
+        private readonly EntityFinderHelper $entityFinderHelper,
         private readonly Finder $finder,
     )
     {

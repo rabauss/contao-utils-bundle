@@ -17,7 +17,7 @@ class RequestUtil
 
     public function __construct(
         protected RequestStack $requestStack,
-        private ContaoFramework $contaoFramework
+        private readonly ContaoFramework $contaoFramework
     ) {
     }
 
@@ -157,6 +157,6 @@ class RequestUtil
         $referer = $request->headers->get('referer');
         $schemeAndHttpHost = $request->getSchemeAndHttpHost();
 
-        return 1 !== preg_match('$^'.$schemeAndHttpHost.'$i', $referer);
+        return 1 !== preg_match('$^'.$schemeAndHttpHost.'$i', (string) $referer);
     }
 }

@@ -12,6 +12,7 @@ use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Model;
 use Contao\PageModel;
 use Contao\System;
@@ -48,7 +49,11 @@ class ModelUtilTest extends AbstractUtilsTestCase
             });
         }
 
-        return new ModelUtil($contaoFramework, $insertTagParser);
+        return new ModelUtil(
+            $contaoFramework,
+            $insertTagParser,
+            $parameters['tokenChecker'] ?? $this->createMock(TokenChecker::class)
+        );
     }
 
     /**
@@ -93,7 +98,11 @@ class ModelUtilTest extends AbstractUtilsTestCase
         $this->assertTrue(false !== strpos($columns[0], "tl_test.start>'"));
         $this->assertTrue(false !== strpos($columns[0], "tl_test.stop<='"));
 
-        \define('BE_USER_LOGGED_IN', true);
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker->method('isPreviewMode')->willReturn(true);
+        $instance = $this->getTestInstance([
+            'tokenChecker' => $tokenChecker,
+        ]);
         $columns = [];
         $instance->addPublishedCheckToModelArrays('tl_test', $columns);
         $this->assertEmpty($columns);

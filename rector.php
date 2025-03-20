@@ -24,7 +24,7 @@ return RectorConfig::configure()
 
     ->withImportNames(importShortClasses: false, removeUnusedImports: true)
     ->withSets([
-        LevelSetList::UP_TO_PHP_80,
+        LevelSetList::UP_TO_PHP_81,
         SymfonySetList::SYMFONY_44,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
         # Erst mit Symfony 6 (Contao 5) nutzen:

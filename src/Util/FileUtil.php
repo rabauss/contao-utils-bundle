@@ -14,8 +14,8 @@ use Contao\FilesModel;
 class FileUtil
 {
     public function __construct(
-        private ContaoFramework $contaoFramework,
-        private string $projectDir
+        private readonly ContaoFramework $contaoFramework,
+        private readonly string $projectDir
     ) {
     }
 

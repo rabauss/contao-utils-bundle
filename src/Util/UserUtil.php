@@ -28,9 +28,9 @@ class UserUtil
      * UserUtil constructor.
      */
     public function __construct(
-        private ModelUtil $modelUtil,
-        private DatabaseUtil $databaseUtil,
-        private ContaoFramework $contaoFramework
+        private readonly ModelUtil $modelUtil,
+        private readonly DatabaseUtil $databaseUtil,
+        private readonly ContaoFramework $contaoFramework
     )
     {
     }

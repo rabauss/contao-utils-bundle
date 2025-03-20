@@ -18,10 +18,10 @@ use Symfony\Component\Routing\RouterInterface;
 class RoutingUtil
 {
     public function __construct(
-        private ContaoCsrfTokenManager $tokenManager,
-        private RouterInterface $router,
-        private string $csrfTokenName,
-        private RequestStack $requestStack
+        private readonly ContaoCsrfTokenManager $tokenManager,
+        private readonly RouterInterface $router,
+        private readonly string $csrfTokenName,
+        private readonly RequestStack $requestStack
     )
     {
     }

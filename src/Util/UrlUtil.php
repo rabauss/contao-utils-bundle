@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class UrlUtil
 {
-    public function __construct(private RequestStack $requestStack) {}
+    public function __construct(private readonly RequestStack $requestStack) {}
 
     /**
      * Remove query parameters (GET parameter) from a URL.
@@ -147,7 +147,7 @@ class UrlUtil
         return
             ((!empty($parsedUrl['scheme']) && !empty($parsedUrl['host'])) ? $parsedUrl['scheme'].'://' : '').
             ($parsedUrl['host'] ?? '').
-            (!empty($parsedUrl['path']) ? (!empty($parsedUrl['host']) ? '/'.ltrim($parsedUrl['path'], '/') : $parsedUrl['path']) : '').
+            (!empty($parsedUrl['path']) ? (!empty($parsedUrl['host']) ? '/'.ltrim((string) $parsedUrl['path'], '/') : $parsedUrl['path']) : '').
             (!empty($parsedUrl['query']) ? '?'.$parsedUrl['query'] : '').
             (!empty($parsedUrl['fragment']) ? '#'.$parsedUrl['fragment'] : '')
         ;

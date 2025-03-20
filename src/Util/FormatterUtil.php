@@ -115,7 +115,7 @@ class FormatterUtil
 
         if (!empty($data['foreignKey']))
         {
-            [$foreignTable, $foreignField] = explode('.', $data['foreignKey']);
+            [$foreignTable, $foreignField] = explode('.', (string) $data['foreignKey']);
 
             $instance = $this->utils->model()->findModelInstanceByPk($foreignTable, $value);
             if (null !== $instance) {

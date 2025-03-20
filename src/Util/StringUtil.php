@@ -31,7 +31,7 @@ class StringUtil
      */
     public function camelCaseToDashed(string $value): string
     {
-        return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $value));
+        return strtolower((string) preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $value));
     }
 
     /**
@@ -41,7 +41,7 @@ class StringUtil
      */
     public function camelCaseToSnake(string $value): string
     {
-        return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1_', $value));
+        return strtolower((string) preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1_', $value));
     }
 
     /**
@@ -156,9 +156,9 @@ class StringUtil
                 [$currentNode, $offset, $previousNode] = $lettersIterator->currentTextPosition();
 
                 if (true === $options['exact']) {
-                    $currentNode->nodeValue = substr($currentNode->nodeValue, 0, $offset + 1);
-                } elseif (\strlen($currentNode->nodeValue) > ($offset + 1)) {
-                    $truncatedText = substr($currentNode->nodeValue, 0, $offset + 1);
+                    $currentNode->nodeValue = substr((string) $currentNode->nodeValue, 0, $offset + 1);
+                } elseif (\strlen((string) $currentNode->nodeValue) > ($offset + 1)) {
+                    $truncatedText = substr((string) $currentNode->nodeValue, 0, $offset + 1);
                     $wordStopPosition = strripos($truncatedText, ' ');
 
                     if (false !== $wordStopPosition) {
@@ -225,7 +225,7 @@ class StringUtil
         $result = preg_replace('@^'.$string.'@i', '', $subject);
 
         if (true === $options['trim']) {
-            $result = ltrim($result);
+            $result = ltrim((string) $result);
         }
 
         return $result;
@@ -247,7 +247,7 @@ class StringUtil
         $result = preg_replace('@'.$string.'$@i', '', $subject);
 
         if (true === $options['trim']) {
-            $result = rtrim($result);
+            $result = rtrim((string) $result);
         }
 
         return $result;
@@ -280,7 +280,7 @@ class StringUtil
             }
         } else {
             // Append to current node
-            $domNode->nodeValue = rtrim($domNode->nodeValue).$ellipsis;
+            $domNode->nodeValue = rtrim((string) $domNode->nodeValue).$ellipsis;
         }
     }
 

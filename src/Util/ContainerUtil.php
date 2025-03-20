@@ -26,13 +26,14 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 class ContainerUtil implements ServiceSubscriberInterface
 {
     public function __construct(
-        private ContainerInterface $locator,
-        private KernelInterface $kernel,
-        private ContaoFramework $framework,
-        private ScopeMatcher $scopeMatcher,
-        private RequestStack $requestStack,
-        private Filesystem $filesystem)
-    {
+        private readonly ContainerInterface $locator,
+        private readonly KernelInterface $kernel,
+        private readonly ContaoFramework $framework,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly RequestStack $requestStack,
+        private readonly Filesystem $filesystem,
+        private readonly TokenChecker $tokenChecker,
+    ) {
     }
 
     /**
@@ -130,7 +131,7 @@ class ContainerUtil implements ServiceSubscriberInterface
     {
         try {
             $className = (new \ReflectionClass($bundleClass))->getShortName();
-        } catch (\ReflectionException $e) {
+        } catch (\ReflectionException) {
             return null;
         }
         $path = '@'.$className;
@@ -139,7 +140,7 @@ class ContainerUtil implements ServiceSubscriberInterface
 
         try {
             return $this->locator->get(FileLocator::class)->locate($path, null, $first);
-        } catch (FileLocatorFileNotFoundException $e) {
+        } catch (FileLocatorFileNotFoundException) {
             return null;
         }
     }
@@ -169,7 +170,7 @@ class ContainerUtil implements ServiceSubscriberInterface
             'Using ContainerUtil::isPreviewMode() has been deprecated and will no longer work in contao-utils-bundle 4.0. Use TokenChecker::isPreviewMode() instead.'
         );
 
-        return $this->locator->get(TokenChecker::class)->isPreviewMode();
+        return $this->tokenChecker->isPreviewMode();
     }
 
     public static function getSubscribedServices(): array
@@ -177,7 +178,6 @@ class ContainerUtil implements ServiceSubscriberInterface
         return [
             'monolog.logger.contao' => LoggerInterface::class,
             FileLocator::class,
-            TokenChecker::class,
         ];
     }
 }

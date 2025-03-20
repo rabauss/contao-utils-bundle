@@ -20,7 +20,7 @@ class DcaUtil
 {
 
     public function __construct(
-        private ContaoFramework $contaoFramework
+        private readonly ContaoFramework $contaoFramework
     ) {
     }
 
@@ -97,14 +97,14 @@ class DcaUtil
                 $boxes[$k] = StringUtil::trimsplit(',', $v);
 
                 foreach ($boxes[$k] as $kk => $vv) {
-                    if (preg_match('/^\[.*\]$/', $vv)) {
+                    if (preg_match('/^\[.*\]$/', (string) $vv)) {
                         ++$eCount;
 
                         continue;
                     }
 
-                    if (preg_match('/^\{.*\}$/', $vv)) {
-                        $legends[$k] = substr($vv, 1, -1);
+                    if (preg_match('/^\{.*\}$/', (string) $vv)) {
+                        $legends[$k] = substr((string) $vv, 1, -1);
                         unset($boxes[$k][$kk]);
                     }
                 }

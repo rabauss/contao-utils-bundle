@@ -19,12 +19,12 @@ class ExtendEntityFinderEvent extends Event
     private ?string $output = null;
 
     public function __construct(
-        private string $table,
-        private int|string $id,
+        private readonly string $table,
+        private readonly int|string $id,
         private array $parents,
         private array $inserttags,
-        private EntityFinderHelper $entityFinderHelper,
-        private bool $onlyText = false
+        private readonly EntityFinderHelper $entityFinderHelper,
+        private readonly bool $onlyText = false
     )
     {
     }

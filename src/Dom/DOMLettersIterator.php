@@ -38,7 +38,7 @@ final class DOMLettersIterator implements Iterator
     private $offset;
     private $key;
     private $letters;
-    private \SplQueue $queue;
+    private readonly \SplQueue $queue;
 
     /**
      * expects DOMElement or DOMDocument (see DOMDocument::load and DOMDocument::loadHTML).
@@ -88,7 +88,7 @@ final class DOMLettersIterator implements Iterator
         if ($this->isTextNode($this->current)) {
             if (-1 == $this->offset) {
                 // fastest way to get individual Unicode chars and does not require mb_* functions
-                preg_match_all('/./us', $this->current->textContent, $m);
+                preg_match_all('/./us', (string) $this->current->textContent, $m);
                 $this->letters = $m[0];
             }
             ++$this->offset;

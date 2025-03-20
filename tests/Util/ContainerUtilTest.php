@@ -61,7 +61,8 @@ class ContainerUtilTest extends ContaoTestCase
             $parameters['framework'],
             $parameters['scopeMather'],
             $parameters['requestStack'],
-            $filesystem
+            $filesystem,
+            $parameters['tokenChecker'] ?? $this->createMock(TokenChecker::class)
         );
     }
 
@@ -95,52 +96,17 @@ class ContainerUtilTest extends ContaoTestCase
         $this->assertTrue($instance->isBackend());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testIsPreviewMode()
     {
-        $input = $this->mockAdapter(['cookie']);
-        $input->method('cookie')->willReturn(false);
-        $framework = $this->mockContaoFramework([
-            Input::class => $input,
-        ]);
-
-        $instance = $this->getTestInstance([
-            'framework' => $framework,
-        ]);
-        $this->assertFalse($instance->isPreviewMode());
-
-        \define('BE_USER_LOGGED_IN', true);
-        $this->assertFalse($instance->isPreviewMode());
-
-        $input = $this->mockAdapter(['cookie']);
-        $input->method('cookie')->willReturn(true);
-        $framework = $this->mockContaoFramework([
-            Input::class => $input,
-        ]);
-        $instance = $this->getTestInstance([
-            'framework' => $framework,
-        ]);
-        $this->assertTrue($instance->isPreviewMode());
-
-        if (!class_exists('Contao\CoreBundle\Security\Authentication\Token\TokenChecker')) {
-            return;
-        }
         $tokenChecker = $this->createMock(TokenChecker::class);
-        $tokenChecker->method('isPreviewMode')->willReturnOnConsecutiveCalls(false, true);
-        $locator = $this->createMock(ServiceLocator::class);
-        $locator->method('has')->willReturn(true);
-        $locator->method('get')->willReturnCallback(function ($id) use ($tokenChecker) {
-            switch ($id) {
-                case TokenChecker::class:
-                    return $tokenChecker;
-            }
-        });
-        $instance = $this->getTestInstance(['locator' => $locator]);
+        $tokenChecker->method('isPreviewMode')->willReturn(false);
+        $instance = $this->getTestInstance();
         $this->assertFalse($instance->isPreviewMode());
-        $this->assertTrue($instance->isPreviewMode());
+
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker->method('isPreviewMode')->willReturn(true);
+        $instance = $this->getTestInstance();
+        $this->assertFalse($instance->isPreviewMode());
     }
 
     public function testIsInstall()

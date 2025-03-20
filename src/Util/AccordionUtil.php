@@ -16,7 +16,7 @@ class AccordionUtil
     private array $accordionStartStopCache = [];
     private array $accordionSingleCache;
 
-    public function __construct(private ContaoFramework $contaoFramework)
+    public function __construct(private readonly ContaoFramework $contaoFramework)
     {
     }
 

@@ -14,16 +14,10 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 class Utils implements ServiceSubscriberInterface
 {
     /**
-     * @var ContainerInterface
-     */
-    protected ContainerInterface $locator;
-
-    /**
      * Utils constructor.
      */
-    public function __construct(ContainerInterface $locator)
+    public function __construct(protected ContainerInterface $locator)
     {
-        $this->locator = $locator;
     }
 
     public function accordion(): AccordionUtil

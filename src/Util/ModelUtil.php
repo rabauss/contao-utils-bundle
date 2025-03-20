@@ -19,8 +19,8 @@ use Contao\Model\Collection;
 class ModelUtil
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private InsertTagParser $insertTagParser,
+        private readonly ContaoFramework $framework,
+        private readonly InsertTagParser $insertTagParser,
         private readonly TokenChecker $tokenChecker,
     )
     {
@@ -224,7 +224,7 @@ class ModelUtil
      */
     public function findParentsRecursively(Model $instance, string $parentProperty = 'pid'): array
     {
-        $table = call_user_func([$instance, 'getTable']);
+        $table = call_user_func($instance->getTable(...));
 
         $parents = [];
         $model = $this->framework->getAdapter(Model::class);

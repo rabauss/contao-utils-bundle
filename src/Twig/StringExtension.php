@@ -28,7 +28,7 @@ class StringExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('anonymize_email', [$this, 'anonymizeEmail']),
+            new TwigFilter('anonymize_email', $this->anonymizeEmail(...)),
         ];
     }
 
