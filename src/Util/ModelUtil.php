@@ -8,10 +8,10 @@
 
 namespace HeimrichHannot\UtilsBundle\Util;
 
-use Contao\Controller;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Date;
 use Contao\Model;
 use Contao\Model\Collection;
@@ -20,7 +20,8 @@ class ModelUtil
 {
     public function __construct(
         private ContaoFramework $framework,
-        private InsertTagParser $insertTagParser
+        private InsertTagParser $insertTagParser,
+        private readonly TokenChecker $tokenChecker,
     )
     {
     }
@@ -61,7 +62,7 @@ class ModelUtil
 
         $t = $table;
 
-        if ($options['ignoreFePreview'] || !(\defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN === true)) {
+        if ($options['ignoreFePreview'] || !$this->tokenChecker->isPreviewMode()) {
             $time = Date::floorToMinute();
 
             $columns[] = "($t.".$options['startField'].($options['invertStartStopFields'] ? '!=' : '=')."'' OR $t.".$options['startField'].($options['invertStartStopFields'] ? '>' : '<=')."'$time') AND ($t.".$options['stopField'].($options['invertStartStopFields'] ? '!=' : '=')."'' OR $t.".$options['stopField'].($options['invertStartStopFields'] ? '<=' : '>')."'".($time + 60)."') AND $t.".$options['publishedField'].($options['invertPublishedField'] ? '!=' : '=')."'1'";

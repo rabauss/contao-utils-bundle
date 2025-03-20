@@ -88,18 +88,14 @@ class FormatterUtil
 
         if ($inputType === 'multiColumnEditor' && $this->isMultiColumnsActive() && is_array($value))
         {
-            $callback = function (int|string $f, array|string|null $v) use ($dc, $settings): string {
-                return $this->formatDcaFieldValue($dc, $f, $v, $settings);
-            };
+            $callback = (fn(int|string $f, array|string|null $v): string => $this->formatDcaFieldValue($dc, $f, $v, $settings));
 
             return $this->formatMultiColumnField($value, $data, $callback);
         }
 
         if (is_array($value))
         {
-            $callback = function (array|string|null $v) use ($dc, $field, $settings): string {
-                return $this->formatDcaFieldValue($dc, $field, $v, $settings);
-            };
+            $callback = (fn(array|string|null $v): string => $this->formatDcaFieldValue($dc, $field, $v, $settings));
 
             return $this->formatArray($value, $settings, $callback);
         }

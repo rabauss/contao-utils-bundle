@@ -109,7 +109,7 @@ class StringUtil
         if (isset($options['randomNumberGenerator']) && \is_callable($options['randomNumberGenerator'])) {
             $number = $options['randomNumberGenerator'](0, \strlen($charList) - 1);
         } else {
-            $number = rand(0, \strlen($charList) - 1);
+            $number = random_int(0, \strlen($charList) - 1);
         }
 
         if ($number > (\strlen($charList) - 1)) {
@@ -262,7 +262,7 @@ class StringUtil
      *
      * @internal
      */
-    private function insertEllipsis(DOMNode $domNode, $ellipsis)
+    private function insertEllipsis(DOMNode $domNode, $ellipsis): void
     {
         $avoid = ['a', 'strong', 'em', 'h1', 'h2', 'h3', 'h4', 'h5']; //html tags to avoid appending the ellipsis to
 
@@ -291,7 +291,7 @@ class StringUtil
      *
      * @internal
      */
-    private function removeProceedingNodes(DOMNode $currentNode, DOMNode $rootNode)
+    private function removeProceedingNodes(DOMNode $currentNode, DOMNode $rootNode): void
     {
         $nextNode = $currentNode->nextSibling;
 

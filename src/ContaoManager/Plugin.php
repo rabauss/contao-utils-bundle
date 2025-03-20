@@ -33,7 +33,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface
     /**
      * Allows a plugin to load container configuration.
      */
-    public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig)
+    public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig): void
     {
         $loader->load('@HeimrichHannotUtilsBundle/config/services.yaml');
     }

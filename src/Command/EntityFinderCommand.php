@@ -12,7 +12,6 @@ use Contao\ArticleModel;
 use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Database;
 use Contao\LayoutModel;
 use Contao\ModuleModel;
 use Contao\PageModel;

@@ -50,9 +50,7 @@ class UserUtil
             return null;
         }
 
-        if (!\is_array($groups) || empty($groups = array_filter($groups, function ($k) {
-                return !empty($k) && is_numeric($k);
-            }))) {
+        if (!\is_array($groups) || empty($groups = array_filter($groups, fn($k) => !empty($k) && is_numeric($k)))) {
             return null;
         }
 

@@ -12,7 +12,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
-use Contao\Input;
 use Contao\PageModel;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -159,16 +158,18 @@ class ContainerUtil implements ServiceSubscriberInterface
 
     /**
      * Return if currently in preview mode.
+     *
+     * @deprecated Use TokenChecker::isPreviewMode() instead
      */
     public function isPreviewMode(): bool
     {
-        if ($this->locator->has(TokenChecker::class)) {
-            return $this->locator->get(TokenChecker::class)->isPreviewMode();
-        }
+        \trigger_deprecation(
+            'heimrichhannot/contao-utils-bundle',
+            '3.7.1',
+            'Using ContainerUtil::isPreviewMode() has been deprecated and will no longer work in contao-utils-bundle 4.0. Use TokenChecker::isPreviewMode() instead.'
+        );
 
-        return \defined('BE_USER_LOGGED_IN')
-                && BE_USER_LOGGED_IN === true
-                && $this->framework->getAdapter(Input::class)->cookie('FE_PREVIEW');
+        return $this->locator->get(TokenChecker::class)->isPreviewMode();
     }
 
     public static function getSubscribedServices(): array
@@ -176,7 +177,7 @@ class ContainerUtil implements ServiceSubscriberInterface
         return [
             'monolog.logger.contao' => LoggerInterface::class,
             FileLocator::class,
-            '?'.TokenChecker::class,
+            TokenChecker::class,
         ];
     }
 }

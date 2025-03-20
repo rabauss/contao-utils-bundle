@@ -8,7 +8,6 @@
 
 namespace HeimrichHannot\UtilsBundle\Util;
 
-use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
