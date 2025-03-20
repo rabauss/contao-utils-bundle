@@ -67,7 +67,7 @@ class EntityFinderCommand extends Command
         $this->output($io, [$result]);
         $io->newLine();
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function loop(string $table, $id): array
