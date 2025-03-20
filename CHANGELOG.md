@@ -7,8 +7,6 @@ All notable changes to this project will be documented in this file.
 - Fixed: removed usage of deprecated constants
 - Deprecated: ContainerUtils::isPreviewMode()
 
-
-
 ## [3.7.0] - 2025-03-19
 - Changed: enhance entity finder with universal entity support fallback ([#93](https://github.com/heimrichhannot/contao-utils-bundle/pull/93))
 - Deprecated: ExtendEntityFinderEvent
