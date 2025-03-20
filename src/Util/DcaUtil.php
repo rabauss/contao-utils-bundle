@@ -10,6 +10,7 @@ namespace HeimrichHannot\UtilsBundle\Util;
 
 use Contao\Controller;
 use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
 use Error;
@@ -214,7 +215,7 @@ class DcaUtil
             }
 
             try {
-                /** @var Controller $controller */
+                /** @var Adapter<Controller> $controller */
                 $controller = $this->contaoFramework->getAdapter(Controller::class);
                 $instance = $controller->importStatic($callback[0]);
             } catch (Exception) {

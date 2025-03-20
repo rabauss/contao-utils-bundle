@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\UtilsBundle\Util;
 
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Date;
 use Contao\MemberModel;
@@ -54,7 +55,7 @@ class UserUtil
             return null;
         }
 
-        /** @var Model $adapter */
+        /** @var Adapter<Model> $adapter */
         $adapter = $this->contaoFramework->getAdapter($modelClass);
 
         $time = Date::floorToMinute();

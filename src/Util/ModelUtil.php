@@ -128,7 +128,7 @@ class ModelUtil
             return null;
         }
 
-        /** @var Model|Adapter $adapter */
+        /** @var Adapter<Model> $adapter */
         return $adapter->findByPk($pk, $options);
     }
 
@@ -183,7 +183,7 @@ class ModelUtil
             return null;
         }
 
-        /** @var Model|Adapter $adapter */
+        /** @var Adapter<Model> $adapter */
         return $adapter->findBy(["$table.id IN(".implode(',', array_map('\intval', $ids)).')'], null, $options);
     }
 

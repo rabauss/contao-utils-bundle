@@ -2,6 +2,7 @@
 
 namespace HeimrichHannot\UtilsBundle\Util;
 
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Image;
 use Contao\StringUtil;
@@ -65,7 +66,7 @@ class BackendUiUtil
         $linkText = '';
 
         if (!empty($options->icon)) {
-            /** @var Image $image */
+            /** @var Adapter<Image> $image */
             $image = $this->framework->getAdapter(Image::class);
             $linkText .= $image->getHtml($options->icon, $title, 'style="vertical-align:top"');
         }
