@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class UrlUtil
 {
-    public function __construct(private RequestStack $requestStack) {}
+    public function __construct(private readonly RequestStack $requestStack) {}
 
     /**
      * Remove query parameters (GET parameter) from a URL.
