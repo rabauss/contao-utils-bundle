@@ -9,44 +9,40 @@
 namespace HeimrichHannot\UtilsBundle\Util;
 
 use HeimrichHannot\UtilsBundle\Exception\InvalidUrlException;
+use HeimrichHannot\UtilsBundle\StaticUtil\SUtils;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class UrlUtil
+readonly class UrlUtil
 {
-    public function __construct(private readonly RequestStack $requestStack) {}
+    public function __construct(private RequestStack $requestStack) {}
 
     /**
      * Remove query parameters (GET parameter) from a URL.
      * You can pass a string or an associative array to $parameter.
      * If no URL is given, the current request url is used.
      *
-     * @example removeQueryStringParameterFromUrl('foo', 'https://example.com?foo=bar&baz=fuzz') // https://example.com?baz=fuzz
-     * @example removeQueryStringParameterFromUrl(['foo', 'baz'], 'https://example.com?foo=bar&baz=fuzz') // https://example.com
+     * @example removeQueryStringParameterFromUrl('foo', 'https://example.com?foo=bar&baz=fuzz') //
+     *          https://example.com?baz=fuzz
+     * @example removeQueryStringParameterFromUrl(['foo', 'baz'], 'https://example.com?foo=bar&baz=fuzz') //
+     *          https://example.com
      *
      * @param string|array<string> $parameter The query parameter names to remove.
      * @param string               $url       The URL to rid of the given query parameters.
      *
      * @return string The URL without the given query parameters.
      */
-    public function removeQueryStringParameterFromUrl(string|array $parameter, string $url = ''): string
+    public function removeQueryStringParameterFromUrl(string|array $parameter, ?string $url = null): string
     {
-        if (empty($url)) {
-            $request = $this->requestStack->getCurrentRequest();
+        $url = $this->getUrlOrDefault($url);
 
-            if (!$request) {
-                return '';
-            }
-            $url = $request->getUri();
-        }
-
-        $parsedUrl = parse_url($url);
+        $parsedUrl = \parse_url($url);
         $query = [];
 
         if (isset($parsedUrl['query']))
         {
-            parse_str($parsedUrl['query'], $query);
+            \parse_str($parsedUrl['query'], $query);
 
-            if (is_string($parameter))
+            if (\is_string($parameter))
             {
                 unset($query[$parameter]);
             }
@@ -56,9 +52,9 @@ class UrlUtil
             }
         }
 
-        $parsedUrl['query'] = !empty($query) ? http_build_query($query) : '';
+        $parsedUrl['query'] = !empty($query) ? \http_build_query($query) : '';
 
-        return $this->buildUrlString($parsedUrl);
+        return SUtils::url()->unparseUrl($parsedUrl);
     }
 
     /**
@@ -70,41 +66,30 @@ class UrlUtil
      * @example addQueryStringParameterToUrl(['foo' => 'bar'], 'https://example.com') // https://example.com?foo=bar
      *
      * @param string|array<string, string> $parameter The query parameters to add.
-     * @param string                       $url       The URL to which query parameter should be added.
+     * @param ?string                      $url       The URL to which the query parameter(s) should be added.
+     *                                                If null, the current request URL is used.
      *
      * @return string The concatenated URL.
      */
-    public function addQueryStringParameterToUrl(string|array $parameter, string $url = ''): string
+    public function addQueryStringParameterToUrl(string|array $parameter, ?string $url = null): string
     {
-        if (empty($url)) {
-            $request = $this->requestStack->getCurrentRequest();
+        $url = $this->getUrlOrDefault($url);
 
-            if (!$request) {
-                return '';
-            }
-            $url = $request->getUri();
+        $parsedUrl = \parse_url($url);
+
+        if ($query = $parsedUrl['query'] ?? null) {
+            parse_str($query, $keyValuePairs);
         }
 
-        $parsedUrl = parse_url($url);
-
-        $pairs = [];
-
-        if (isset($parsedUrl['query'])) {
-            parse_str($parsedUrl['query'], $pairs);
-        }
-
-        if (is_string($parameter)) {
-            $newPairs = [];
-            parse_str(str_replace('&amp;', '&', $parameter), $newPairs);
+        if (\is_string($parameter)) {
+            \parse_str(\str_replace('&amp;', '&', $parameter), $newKeyValuePair);
         } else {
-            $newPairs = $parameter;
+            $newKeyValuePair = $parameter;
         }
 
-        $pairs = array_merge($pairs, $newPairs);
+        $parsedUrl['query'] = \http_build_query(\array_merge($keyValuePairs ?? [], $newKeyValuePair ?? []));
 
-        $parsedUrl['query'] = (!empty($pairs) ? http_build_query($pairs) : '');
-
-        return $this->buildUrlString($parsedUrl);
+        return SUtils::url()->unparseUrl($parsedUrl);
     }
 
     /**
@@ -127,29 +112,32 @@ class UrlUtil
         ], $options);
 
         /** @var array|false $urlParts */
-        $urlParts = parse_url($url);
+        $urlParts = \parse_url($url);
 
         if (false === $urlParts) {
-            throw new InvalidUrlException('Your given url is invalid and could not be parsed.');
+            throw new InvalidUrlException('The URL provided is invalid and could not be parsed.');
         }
 
         unset($urlParts['schema'], $urlParts['host'], $urlParts['port'], $urlParts['user'], $urlParts['pass']);
 
         if (isset($urlParts['path']) && $options['removeLeadingSlash']) {
-            $urlParts['path'] = ltrim($urlParts['path'], '/');
+            $urlParts['path'] = \ltrim($urlParts['path'], '/');
         }
 
-        return $this->buildUrlString($urlParts);
+        return SUtils::url()->unparseUrl($urlParts);
     }
 
-    private function buildUrlString(array $parsedUrl): string
+    private function getUrlOrDefault(?string $url = null): string
     {
-        return
-            ((!empty($parsedUrl['scheme']) && !empty($parsedUrl['host'])) ? $parsedUrl['scheme'].'://' : '').
-            ($parsedUrl['host'] ?? '').
-            (!empty($parsedUrl['path']) ? (!empty($parsedUrl['host']) ? '/'.ltrim((string) $parsedUrl['path'], '/') : $parsedUrl['path']) : '').
-            (!empty($parsedUrl['query']) ? '?'.$parsedUrl['query'] : '').
-            (!empty($parsedUrl['fragment']) ? '#'.$parsedUrl['fragment'] : '')
-        ;
+        if ($url === null)
+        {
+            if (!$request = $this->requestStack->getCurrentRequest()) {
+                return '';
+            }
+
+            $url = $request->getUri();
+        }
+
+        return $url;
     }
 }

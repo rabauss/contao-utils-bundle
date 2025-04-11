@@ -16,6 +16,11 @@ class SUtils
         return static::getInstance(StaticClassUtil::class);
     }
 
+    public static function url(): StaticUrlUtil
+    {
+        return static::getInstance(StaticUrlUtil::class);
+    }
+
     /**
      * @template T
      * @param class-string<T> $class
