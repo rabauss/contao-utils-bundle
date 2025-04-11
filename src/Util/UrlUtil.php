@@ -120,7 +120,7 @@ class UrlUtil
 
         unset($urlParts['schema'], $urlParts['user'], $urlParts['pass'], $urlParts['host'], $urlParts['port']);
 
-        return SUtils::url()->unparseUrl($urlParts, prefixPath: (bool) $options['removeLeadingSlash']);
+        return SUtils::url()->unparseUrl($urlParts, prefixPath: !$options['removeLeadingSlash']);
     }
 
     private function getUrlOrDefault(?string $url = null): string
