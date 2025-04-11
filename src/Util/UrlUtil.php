@@ -87,7 +87,7 @@ class UrlUtil
             $newKeyValuePair = $parameter;
         }
 
-        $parsedUrl['query'] = \http_build_query(\array_merge($keyValuePairs ?? [], $newKeyValuePair ?? []));
+        $parsedUrl['query'] = \http_build_query(\array_merge($keyValuePairs ?? [], $newKeyValuePair));
 
         return SUtils::url()->unparseUrl($parsedUrl);
     }
