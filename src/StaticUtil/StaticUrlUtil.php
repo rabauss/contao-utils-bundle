@@ -18,21 +18,24 @@ class StaticUrlUtil extends AbstractStaticUtil
      *     path?: string,
      *     query?: string,
      *     fragment?: string,
-     * }                $parsedUrl          The parsed URL components.
-     * @param bool|null $emptySchemeSuffix  Whether to add `//` before the host if no scheme is provided. Defaults to true.
-     * @param bool|null $queryPrefix        Whether to add `?` before the query string if the URL is otherwise empty. Defaults to true.
-     * @param bool|null $fragmentPrefix     Whether to add `#` before the fragment if the URL is otherwise empty. Defaults to true.
+     * }                $parsedUrl         The parsed URL components.
+     * @param bool|null $suffixEmptyScheme Whether to add `//` before the host if no scheme is provided. Defaults to true.
+     * @param bool|null $prefixPath        Whether to add `/` before the path if the URL is otherwise empty. Defaults to true.
+     * @param bool|null $prefixQuery       Whether to add `?` before the query string if the URL is otherwise empty. Defaults to true.
+     * @param bool|null $prefixFragment    Whether to add `#` before the fragment if the URL is otherwise empty. Defaults to true.
      * @return string
      */
     public static function unparseUrl(
         array $parsedUrl,
-        ?bool $emptySchemeSuffix = null,
-        ?bool $queryPrefix = null,
-        ?bool $fragmentPrefix = null,
+        ?bool $suffixEmptyScheme = null,
+        ?bool $prefixPath = null,
+        ?bool $prefixQuery = null,
+        ?bool $prefixFragment = null,
     ): string {
-        $emptySchemeSuffix ??= true;
-        $queryPrefix ??= true;
-        $fragmentPrefix ??= true;
+        $suffixEmptyScheme ??= true;
+        $prefixPath ??= true;
+        $prefixQuery ??= true;
+        $prefixFragment ??= true;
 
         if (empty($parsedUrl))
         {
@@ -54,7 +57,7 @@ class StaticUrlUtil extends AbstractStaticUtil
         {
             if (isset($scheme)) {
                 $url .= $scheme . '://';
-            } elseif ($emptySchemeSuffix) {
+            } elseif ($suffixEmptyScheme) {
                 $url .= '//';
             }
 
@@ -62,12 +65,12 @@ class StaticUrlUtil extends AbstractStaticUtil
             $url .= $host;
             $url .= isset($port) ? ':' . $port : '';
 
-            $url = isset($path) ? rtrim($url, '/') . '/' : $url;
+            $url = rtrim($url, '/');
         }
 
-        $url .= empty($path) ? '' : ltrim($path, '/');
-        $url .= empty($query) ? '' : ($url || $queryPrefix ? '?' : '') . $query;
-        $url .= empty($fragment) ? '' : ($url || $fragmentPrefix ? '#' : '') . $fragment;
+        $url .= empty($path) ? '' : ($url || $prefixPath ? '/' : '') . ltrim($path, '/');
+        $url .= empty($query) ? '' : ($url || $prefixQuery ? '?' : '') . $query;
+        $url .= empty($fragment) ? '' : ($url || $prefixFragment ? '#' : '') . $fragment;
 
         return $url;
     }

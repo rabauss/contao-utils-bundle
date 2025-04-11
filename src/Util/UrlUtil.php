@@ -118,13 +118,9 @@ class UrlUtil
             throw new InvalidUrlException('The URL provided is invalid and could not be parsed.');
         }
 
-        unset($urlParts['schema'], $urlParts['host'], $urlParts['port'], $urlParts['user'], $urlParts['pass']);
+        unset($urlParts['schema'], $urlParts['user'], $urlParts['pass'], $urlParts['host'], $urlParts['port']);
 
-        if (isset($urlParts['path']) && $options['removeLeadingSlash']) {
-            $urlParts['path'] = \ltrim($urlParts['path'], '/');
-        }
-
-        return SUtils::url()->unparseUrl($urlParts);
+        return SUtils::url()->unparseUrl($urlParts, prefixPath: (bool) $options['removeLeadingSlash']);
     }
 
     private function getUrlOrDefault(?string $url = null): string
