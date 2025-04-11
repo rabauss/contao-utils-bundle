@@ -149,9 +149,10 @@ class EntityFinderHelper
 
             protected $blnPreventSaving = true;
 
+            /** @noinspection PhpMissingParentConstructorInspection */
             public function __construct(string $table, array $data = [])
             {
-                $this->strTable = $table;
+                static::$strTable = $table;
                 $this->setRow($data);
             }
 
