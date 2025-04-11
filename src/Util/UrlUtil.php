@@ -12,7 +12,7 @@ use HeimrichHannot\UtilsBundle\Exception\InvalidUrlException;
 use HeimrichHannot\UtilsBundle\StaticUtil\SUtils;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-readonly class UrlUtil
+class UrlUtil
 {
     public function __construct(private RequestStack $requestStack) {}
 

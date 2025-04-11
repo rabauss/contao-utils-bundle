@@ -65,9 +65,9 @@ class StaticUrlUtil extends AbstractStaticUtil
             $url = isset($path) ? rtrim($url, '/') . '/' : $url;
         }
 
-        $url .= isset($path) ? ltrim($path, '/') : '';
-        $url .= isset($query) ? ($url || $queryPrefix ? '?' : '') . $query : '';
-        $url .= isset($fragment) ? ($url || $fragmentPrefix ? '#' : '') . $fragment : '';
+        $url .= empty($path) ? '' : ltrim($path, '/');
+        $url .= empty($query) ? '' : ($url || $queryPrefix ? '?' : '') . $query;
+        $url .= empty($fragment) ? '' : ($url || $fragmentPrefix ? '#' : '') . $fragment;
 
         return $url;
     }
