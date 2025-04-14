@@ -29,6 +29,8 @@ class UrlUtilTest extends ContaoTestCase
         $this->assertSame($instance->addQueryStringParameterToUrl(['foo' => 'bar'], $url), $url . '?foo=bar');
         $this->assertSame($instance->addQueryStringParameterToUrl(['foo' => 'bar'], $url . '?foo=baz'), $url . '?foo=bar');
         $this->assertSame($instance->addQueryStringParameterToUrl(['foo' => 'bar', 'spam' => 'ham'], $url . '?foo=baz'), $url . '?foo=bar&spam=ham');
+
+        $this->assertSame($instance->addQueryStringParameterToUrl(['foo' => 'bar', 'spam' => 'ham'], ''), '?foo=bar&spam=ham');
     }
 
     public function testRemoveQueryStringParameterFromUrl()
