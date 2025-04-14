@@ -7,13 +7,13 @@ class StaticUrlUtil extends AbstractStaticUtil
     /**
      * This method is the reverse of {@see \parse_url `parse_url(...)`} and is used to build a URL from its components.
      *
-     * @see https://www.php.net/manual/en/function.parse-url.php
-     *
      * Options:
      * - suffixEmptyScheme (bool): Whether to add `//` before the host if no scheme is provided. (default: true)
      * - prefixPath (bool):        Whether to add `/` before the path if the URL is otherwise empty. (default: true)
      * - prefixQuery (bool):       Whether to add `?` before the query string if the URL is otherwise empty. (default: true)
      * - prefixFragment (bool):    Whether to add `#` before the fragment if the URL is otherwise empty. (default: true)
+     *
+     * @see https://www.php.net/manual/en/function.parse-url.php
      *
      * @param array{
      *     scheme?: string,
@@ -25,12 +25,14 @@ class StaticUrlUtil extends AbstractStaticUtil
      *     query?: string,
      *     fragment?: string,
      * } $parsedUrl The parsed URL components.
+     *
      * @param array{
      *     suffixEmptyScheme?: bool,
      *     prefixPath?: bool,
      *     prefixQuery?: bool,
      *     prefixFragment?: bool,
      * } $options   Options for URL construction.
+     *
      * @return string The reconstructed URL.
      */
     public static function unparseUrl(array $parsedUrl, array $options = []): string
