@@ -107,10 +107,6 @@ class UrlUtil
      */
     public function makeUrlRelative(string $url, array $options = []): string
     {
-        $options = array_merge([
-            'removeLeadingSlash' => false,
-        ], $options);
-
         /** @var array|false $urlParts */
         $urlParts = \parse_url($url);
 
@@ -120,7 +116,7 @@ class UrlUtil
 
         unset($urlParts['schema'], $urlParts['user'], $urlParts['pass'], $urlParts['host'], $urlParts['port']);
 
-        return SUtils::url()->unparseUrl($urlParts, prefixPath: !$options['removeLeadingSlash']);
+        return SUtils::url()->unparseUrl($urlParts, ['prefixPath' => !($options['removeLeadingSlash'] ?? false)]);
     }
 
     private function getUrlOrDefault(?string $url = null): string
