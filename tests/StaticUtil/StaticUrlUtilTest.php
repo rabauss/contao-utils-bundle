@@ -16,22 +16,21 @@ class StaticUrlUtilTest extends ContaoTestCase
         $this->assertEquals(
             '//operator:secret@example.com:1234',
             StaticUrlUtil::unparseUrl(['user' => 'operator', 'pass' => 'secret', 'host' => 'example.com', 'port' => '1234'],
-                suffixEmptyScheme: true),
+                ['suffixEmptyScheme' => true]),
         );
         $this->assertEquals('example.com:1234', StaticUrlUtil::unparseUrl(['host' => 'example.com', 'port' => '1234'],
-            suffixEmptyScheme: false));
+            ['suffixEmptyScheme' => false]));
 
         $this->assertEquals('?foo=bar', StaticUrlUtil::unparseUrl(['query' => 'foo=bar']));
-        $this->assertEquals('?foo=bar', StaticUrlUtil::unparseUrl(['query' => 'foo=bar'], prefixQuery: true));
-        $this->assertEquals('foo=bar', StaticUrlUtil::unparseUrl(['query' => 'foo=bar'], prefixQuery: false));
+        $this->assertEquals('?foo=bar', StaticUrlUtil::unparseUrl(['query' => 'foo=bar'], ['prefixQuery' => true]));
+        $this->assertEquals('foo=bar', StaticUrlUtil::unparseUrl(['query' => 'foo=bar'], ['prefixQuery' => false]));
 
         $this->assertEquals('#foo=bar', StaticUrlUtil::unparseUrl(['fragment' => 'foo=bar']));
-        $this->assertEquals('#foo=bar', StaticUrlUtil::unparseUrl(['fragment' => 'foo=bar'], prefixFragment: true));
-        $this->assertEquals('foo=bar', StaticUrlUtil::unparseUrl(['fragment' => 'foo=bar'], prefixFragment: false));
+        $this->assertEquals('#foo=bar', StaticUrlUtil::unparseUrl(['fragment' => 'foo=bar'], ['prefixFragment' => true]));
+        $this->assertEquals('foo=bar', StaticUrlUtil::unparseUrl(['fragment' => 'foo=bar'], ['prefixFragment' => false]));
 
         $this->assertEquals('foo=bar#baz', StaticUrlUtil::unparseUrl(['query' => 'foo=bar', 'fragment' => 'baz'],
-            prefixQuery: false,
-            prefixFragment: false));
+            ['prefixQuery' => false, 'prefixFragment' => false]));
 
         $url = 'wss://user:pass@example.com:1234?foo=bar#baz';
         $this->assertEquals($url, StaticUrlUtil::unparseUrl(\parse_url($url)));
