@@ -158,6 +158,7 @@ class EntityFinderHelper
                 $this->setRow($data);
             }
 
+            /** @codeCoverageIgnore */
             public function __get($strKey)
             {
                 if ($strKey === 'strTable')
@@ -168,6 +169,7 @@ class EntityFinderHelper
                 return parent::__get($strKey);
             }
 
+            /** @codeCoverageIgnore */
             public function __set($strKey, $varValue)
             {
                 if ($strKey === 'strTable')
