@@ -152,12 +152,27 @@ class EntityFinderHelper
             /** @noinspection PhpMissingParentConstructorInspection */
             public function __construct(string $table, array $data = [])
             {
-                static::$strTable = $table;
+                self::$strTable = $table;
                 $this->setRow($data);
+            }
+
+            public function __get($strKey)
+            {
+                if ($strKey === 'strTable')
+                {
+                    return self::$strTable;
+                }
+
+                return parent::__get($strKey);
             }
 
             public function __set($strKey, $varValue)
             {
+                if ($strKey === 'strTable')
+                {
+                    self::$strTable = $varValue;
+                }
+
                 if (isset($this->arrData[$strKey]) && $this->arrData[$strKey] === $varValue)
                 {
                     return;
