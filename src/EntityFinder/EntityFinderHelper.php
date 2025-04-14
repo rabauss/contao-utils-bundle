@@ -17,6 +17,7 @@ use Contao\ModuleModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
 use HeimrichHannot\UtilsBundle\Util\Utils;
+use ValueError;
 
 class EntityFinderHelper
 {
@@ -170,7 +171,7 @@ class EntityFinderHelper
             {
                 if ($strKey === 'strTable')
                 {
-                    self::$strTable = $varValue;
+                    throw new ValueError('Cannot set strTable property non-statically');
                 }
 
                 if (isset($this->arrData[$strKey]) && $this->arrData[$strKey] === $varValue)
