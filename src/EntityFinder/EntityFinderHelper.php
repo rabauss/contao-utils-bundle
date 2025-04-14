@@ -147,13 +147,14 @@ class EntityFinderHelper
     private function anonymousModel(string $table, array $data): Model
     {
         return new class($table, $data) extends Model {
+            protected static $strTable;
 
             protected $blnPreventSaving = true;
 
             /** @noinspection PhpMissingParentConstructorInspection */
             public function __construct(string $table, array $data = [])
             {
-                self::$strTable = $table;
+                static::$strTable = $table;
                 $this->setRow($data);
             }
 
@@ -161,7 +162,7 @@ class EntityFinderHelper
             {
                 if ($strKey === 'strTable')
                 {
-                    return self::$strTable;
+                    return static::$strTable;
                 }
 
                 return parent::__get($strKey);
