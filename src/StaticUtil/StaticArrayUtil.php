@@ -9,10 +9,10 @@ class StaticArrayUtil extends AbstractStaticUtil
      * If the keys not exist, the new entry is added to the end of the array.
      * Array is passed as reference.
      *
-     * @param array        $array    Array the new entry should inserted to
-     * @param array|string $keys     The key or keys where the new entry should be added before
-     * @param string       $newKey   The key of the entry that should be added
-     * @param mixed        $newValue The value of the entry that should be added
+     * @param array        $array    The Array to modify
+     * @param array|string $keys     The key or keys before which the new entry should be added
+     * @param string       $newKey   The key of the entry added
+     * @param mixed        $newValue The value of the entry added
      */
     public static function insertBeforeKey(array &$array, array|string $keys, string $newKey, mixed $newValue): void
     {
@@ -39,9 +39,9 @@ class StaticArrayUtil extends AbstractStaticUtil
      * Insert a value into an existing array by key name.
      *
      * Additional options:
-     * - (bool) strict: Strict behavior for array search. Default false
-     * - (bool) attachMissingKey: Attach value to the end of the array if the key does not exist. Default: true
-     * - (int) offset: Add additional offset.
+     * - strict (bool):           Strict behavior for array search. (default: false)
+     * - attachMissingKey (bool): Attach value to the end of the array if the key does not exist. (default: true)
+     * - offset (int):            Add additional offset. (default: 0)
      *
      * @param array  $array   The target array
      * @param string $key     the existing target key in the array
@@ -84,11 +84,11 @@ class StaticArrayUtil extends AbstractStaticUtil
     /**
      * Removes a value from an array.
      *
-     * @return bool Returns true if the value has been found and removed, false in other cases
+     * @return bool Returns true if the value has been found and removed, false otherwise.
      */
     public static function removeValue(mixed $value, array &$array): bool
     {
-        $position = array_search($value, $array);
+        $position = \array_search($value, $array);
 
         if (false !== $position) {
             unset($array[$position]);

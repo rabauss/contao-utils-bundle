@@ -9,6 +9,12 @@ class StaticUrlUtil extends AbstractStaticUtil
      *
      * @see https://www.php.net/manual/en/function.parse-url.php
      *
+     *  Options:
+     *  - suffixEmptyScheme (bool): Whether to add `//` before the host if no scheme is provided. (default: true)
+     *  - prefixPath (bool):        Whether to add `/` before the path if the URL is otherwise empty. (default: true)
+     *  - prefixQuery (bool):       Whether to add `?` before the query string if the URL is otherwise empty. (default: true)
+     *  - prefixFragment (bool):    Whether to add `#` before the fragment if the URL is otherwise empty. (default: true)
+     *
      * @param array{
      *     scheme?: string,
      *     host?: string,
@@ -18,37 +24,36 @@ class StaticUrlUtil extends AbstractStaticUtil
      *     path?: string,
      *     query?: string,
      *     fragment?: string,
-     * }                $parsedUrl         The parsed URL components.
-     * @param bool|null $suffixEmptyScheme Whether to add `//` before the host if no scheme is provided. Defaults to true.
-     * @param bool|null $prefixPath        Whether to add `/` before the path if the URL is otherwise empty. Defaults to true.
-     * @param bool|null $prefixQuery       Whether to add `?` before the query string if the URL is otherwise empty. Defaults to true.
-     * @param bool|null $prefixFragment    Whether to add `#` before the fragment if the URL is otherwise empty. Defaults to true.
-     * @return string
+     * } $parsedUrl The parsed URL components.
+     * @param array{
+     *     suffixEmptyScheme?: bool,
+     *     prefixPath?: bool,
+     *     prefixQuery?: bool,
+     *     prefixFragment?: bool,
+     * } $options   Options for URL construction.
+     * @return string The reconstructed URL.
      */
     public static function unparseUrl(
         array $parsedUrl,
-        ?bool $suffixEmptyScheme = null,
-        ?bool $prefixPath = null,
-        ?bool $prefixQuery = null,
-        ?bool $prefixFragment = null,
+        array $options = [],
     ): string {
-        $suffixEmptyScheme ??= true;
-        $prefixPath ??= true;
-        $prefixQuery ??= true;
-        $prefixFragment ??= true;
+        $suffixEmptyScheme = (bool) ($options['suffixEmptyScheme'] ?? true);
+        $prefixPath        = (bool) ($options['prefixPath'] ?? true);
+        $prefixQuery       = (bool) ($options['prefixQuery'] ?? true);
+        $prefixFragment    = (bool) ($options['prefixFragment'] ?? true);
 
         if (empty($parsedUrl))
         {
             return '';
         }
 
-        $scheme = $parsedUrl['scheme'] ?? null;
-        $host = $parsedUrl['host'] ?? null;
-        $port = $parsedUrl['port'] ?? null;
-        $user = $parsedUrl['user'] ?? null;
-        $pass = $parsedUrl['pass'] ?? null;
-        $path = $parsedUrl['path'] ?? null;
-        $query = $parsedUrl['query'] ?? null;
+        $scheme   = $parsedUrl['scheme'] ?? null;
+        $host     = $parsedUrl['host'] ?? null;
+        $port     = $parsedUrl['port'] ?? null;
+        $user     = $parsedUrl['user'] ?? null;
+        $pass     = $parsedUrl['pass'] ?? null;
+        $path     = $parsedUrl['path'] ?? null;
+        $query    = $parsedUrl['query'] ?? null;
         $fragment = $parsedUrl['fragment'] ?? null;
 
         $url = '';

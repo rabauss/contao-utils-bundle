@@ -2,23 +2,23 @@
 
 namespace HeimrichHannot\UtilsBundle\StaticUtil;
 
-class SUtils
+final class SUtils
 {
-    protected static array $instances = [];
+    private static array $instances = [];
 
     public static function array(): StaticArrayUtil
     {
-        return static::getInstance(StaticArrayUtil::class);
+        return SUtils::getInstance(StaticArrayUtil::class);
     }
 
     public static function class(): StaticClassUtil
     {
-        return static::getInstance(StaticClassUtil::class);
+        return SUtils::getInstance(StaticClassUtil::class);
     }
 
     public static function url(): StaticUrlUtil
     {
-        return static::getInstance(StaticUrlUtil::class);
+        return SUtils::getInstance(StaticUrlUtil::class);
     }
 
     /**
@@ -28,10 +28,10 @@ class SUtils
      */
     protected static function getInstance(string $class)
     {
-        if (!isset(static::$instances[$class])) {
-            static::$instances[$class] = new $class;
+        if (!isset(SUtils::$instances[$class])) {
+            SUtils::$instances[$class] = new $class;
         }
 
-        return static::$instances[$class];
+        return SUtils::$instances[$class];
     }
 }
