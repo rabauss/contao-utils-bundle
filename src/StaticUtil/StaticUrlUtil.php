@@ -33,10 +33,8 @@ class StaticUrlUtil extends AbstractStaticUtil
      * } $options   Options for URL construction.
      * @return string The reconstructed URL.
      */
-    public static function unparseUrl(
-        array $parsedUrl,
-        array $options = [],
-    ): string {
+    public static function unparseUrl(array $parsedUrl, array $options = []): string
+    {
         $suffixEmptyScheme = (bool) ($options['suffixEmptyScheme'] ?? true);
         $prefixPath        = (bool) ($options['prefixPath'] ?? true);
         $prefixQuery       = (bool) ($options['prefixQuery'] ?? true);
