@@ -17,6 +17,7 @@ use Contao\ModuleModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
 use HeimrichHannot\UtilsBundle\Util\Utils;
+use ValueError;
 
 class EntityFinderHelper
 {
@@ -146,17 +147,34 @@ class EntityFinderHelper
     private function anonymousModel(string $table, array $data): Model
     {
         return new class($table, $data) extends Model {
+            protected static $strTable;
 
             protected $blnPreventSaving = true;
 
+            /** @noinspection PhpMissingParentConstructorInspection */
             public function __construct(string $table, array $data = [])
             {
-                $this->strTable = $table;
+                static::$strTable = $table;
                 $this->setRow($data);
+            }
+
+            public function __get($strKey)
+            {
+                if ($strKey === 'strTable')
+                {
+                    return static::$strTable;
+                }
+
+                return parent::__get($strKey);
             }
 
             public function __set($strKey, $varValue)
             {
+                if ($strKey === 'strTable')
+                {
+                    throw new ValueError('Cannot set strTable property non-statically');
+                }
+
                 if (isset($this->arrData[$strKey]) && $this->arrData[$strKey] === $varValue)
                 {
                     return;
