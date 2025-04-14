@@ -9,11 +9,11 @@ class StaticUrlUtil extends AbstractStaticUtil
      *
      * @see https://www.php.net/manual/en/function.parse-url.php
      *
-     *  Options:
-     *  - suffixEmptyScheme (bool): Whether to add `//` before the host if no scheme is provided. (default: true)
-     *  - prefixPath (bool):        Whether to add `/` before the path if the URL is otherwise empty. (default: true)
-     *  - prefixQuery (bool):       Whether to add `?` before the query string if the URL is otherwise empty. (default: true)
-     *  - prefixFragment (bool):    Whether to add `#` before the fragment if the URL is otherwise empty. (default: true)
+     * Options:
+     * - suffixEmptyScheme (bool): Whether to add `//` before the host if no scheme is provided. (default: true)
+     * - prefixPath (bool):        Whether to add `/` before the path if the URL is otherwise empty. (default: true)
+     * - prefixQuery (bool):       Whether to add `?` before the query string if the URL is otherwise empty. (default: true)
+     * - prefixFragment (bool):    Whether to add `#` before the fragment if the URL is otherwise empty. (default: true)
      *
      * @param array{
      *     scheme?: string,
