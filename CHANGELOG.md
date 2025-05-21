@@ -2,8 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [3.8.0] - 2025-05-20
-Added: StaticArrayUtils::filterByPrefixes
+## [3.9.0] - 2025-05-20
+- Added: StaticArrayUtils::filterByPrefixes ([#100](https://github.com/heimrichhannot/contao-utils-bundle/pull/100))
+- Added: AliasField ([#102](https://github.com/heimrichhannot/contao-utils-bundle/pull/102))
+
+## [3.8.0] - 2025-04-14
+- Changed: Url Util Improvements by @ericges in https://github.com/heimrichhannot/contao-utils-bundle/pull/94
+- Fixed: EntityFinderHelper.php by @ericges in https://github.com/heimrichhannot/contao-utils-bundle/pull/95
 
 ## [3.7.1] - 2025-03-20
 - Changed: enhance code quality by using rector
