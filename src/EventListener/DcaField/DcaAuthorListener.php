@@ -21,43 +21,7 @@ class DcaAuthorListener extends AbstractDcaFieldListener
 
         $options = AuthorField::getRegistrations()[$table];
         $authorFieldName = $this->getAuthorFieldName($options);
-
-        /** @var TokenStorageInterface $tokenStorage */
-        $tokenStorage = $this->container->get('token_storage');
-        $user = $tokenStorage->getToken()?->getUser();
-
-        $authorField = [
-            'inputType' => 'select',
-            'eval' => [
-                'doNotCopy' => true,
-                'mandatory' => true,
-                'chosen' => true,
-                'includeBlankOption' => true,
-                'tl_class' => 'w50'
-            ],
-            'sql' => "int(10) unsigned NOT NULL default 0",
-        ];
-
-        $this->applyDefaultFieldAdjustments($authorField, $options);
-
-        if ($options->isUseDefaultLabel()) {
-            $authorField['label'] = &$GLOBALS['TL_LANG']['MSC']['utilsBundle']['author'];
-        }
-
-        $authorField['default'] = 0;
-        if (AuthorField::TYPE_USER === $options->getType()) {
-            if ($user instanceof BackendUser) {
-                $authorField['default'] = $user->id;
-            }
-            $authorField['foreignKey'] = 'tl_user.name';
-            $authorField['relation'] = ['type'=>'hasOne', 'load'=>'lazy'];
-        } elseif (AuthorField::TYPE_MEMBER === $options->getType()) {
-            if ($user instanceof FrontendUser) {
-                $authorField['default'] = $user->id;
-            }
-            $authorField['foreignKey'] = "tl_member.CONCAT(firstname,' ',lastname)";
-            $authorField['relation'] = ['type'=>'hasOne', 'load'=>'lazy'];
-        }
+        $authorField = $this->createAuthorField($options);
 
         $GLOBALS['TL_DCA'][$table]['fields'][$authorFieldName] = $authorField;
         $GLOBALS['TL_DCA'][$table]['config']['oncopy_callback'][] = [self::class, 'onConfigCopyCallback'];
@@ -113,5 +77,46 @@ class DcaAuthorListener extends AbstractDcaFieldListener
         $services = parent::getSubscribedServices();
         $services['token_storage'] = TokenStorageInterface::class;
         return $services;
+    }
+
+    public function createAuthorField(AuthorFieldConfiguration $options): array
+    {
+        /** @var TokenStorageInterface $tokenStorage */
+        $tokenStorage = $this->container->get('token_storage');
+        $user = $tokenStorage->getToken()?->getUser();
+
+        $authorField = [
+            'inputType' => 'select',
+            'eval' => [
+                'doNotCopy' => true,
+                'mandatory' => true,
+                'chosen' => true,
+                'includeBlankOption' => true,
+                'tl_class' => 'w50'
+            ],
+            'sql' => "int(10) unsigned NOT NULL default 0",
+        ];
+
+        $this->applyDefaultFieldAdjustments($authorField, $options);
+
+        if ($options->isUseDefaultLabel()) {
+            $authorField['label'] = &$GLOBALS['TL_LANG']['MSC']['utilsBundle']['author'];
+        }
+
+        $authorField['default'] = 0;
+        if (AuthorField::TYPE_USER === $options->getType()) {
+            if ($user instanceof BackendUser) {
+                $authorField['default'] = $user->id;
+            }
+            $authorField['foreignKey'] = 'tl_user.name';
+            $authorField['relation'] = ['type' => 'hasOne', 'load' => 'lazy'];
+        } elseif (AuthorField::TYPE_MEMBER === $options->getType()) {
+            if ($user instanceof FrontendUser) {
+                $authorField['default'] = $user->id;
+            }
+            $authorField['foreignKey'] = "tl_member.CONCAT(firstname,' ',lastname)";
+            $authorField['relation'] = ['type' => 'hasOne', 'load' => 'lazy'];
+        }
+        return $authorField;
     }
 }
