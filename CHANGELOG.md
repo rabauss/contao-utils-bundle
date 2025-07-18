@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.9.1] - 2025-07-18
+- Fixed: issue in UserUtil
+
 ## [3.9.0] - 2025-05-20
 - Added: StaticArrayUtils::filterByPrefixes ([#100](https://github.com/heimrichhannot/contao-utils-bundle/pull/100))
 - Added: AliasField ([#102](https://github.com/heimrichhannot/contao-utils-bundle/pull/102))

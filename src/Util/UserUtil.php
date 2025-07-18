@@ -62,7 +62,6 @@ class UserUtil
         $values = [];
 
         $columns = ["($table.start='' OR $table.start<='$time') AND ($table.stop='' OR $table.stop>'".($time + 60)."') AND $table.disable=''"];
-        $columns[] = '';
 
         $blobResult = $this->databaseUtil->createWhereForSerializedBlob('groups', $groups);
         $columns[] = $blobResult->createOrWhere();
