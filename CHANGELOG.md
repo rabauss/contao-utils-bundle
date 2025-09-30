@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.9.3] - 2025-09-30
+- Fixed: implicitly nullable parameter deprecated errors
+
 ## [3.9.2] - 2025-07-18
 - Changed: moved author dca field generation to own method 
 
