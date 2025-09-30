@@ -52,7 +52,7 @@ class StaticArrayUtil extends AbstractStaticUtil
      *     offset?: int
      * } $options Additional options
      */
-    public static function insertAfterKey(array &$array, string $key, mixed $value, string $newKey = null, array $options = []): void
+    public static function insertAfterKey(array &$array, string $key, mixed $value, ?string $newKey = null, array $options = []): void
     {
         $options = array_merge([
             'strict' => false,
@@ -116,7 +116,7 @@ class StaticArrayUtil extends AbstractStaticUtil
 
         foreach ($data as $key => $value) {
             foreach ($prefixes as $prefix) {
-                if (str_starts_with($key, $prefix)) {
+                if (str_starts_with((string) $key, $prefix)) {
                     $extract[$key] = $value;
                     break;
                 }

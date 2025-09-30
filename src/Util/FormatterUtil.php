@@ -42,7 +42,7 @@ class FormatterUtil
         DataContainer              $dc,
         string                     $field,
         array|string|null          $value,
-        FormatDcaFieldValueOptions $settings = null
+        ?FormatDcaFieldValueOptions $settings = null
     ): mixed {
         $settings ??= new FormatDcaFieldValueOptions();
 
@@ -246,7 +246,7 @@ class FormatterUtil
      *   Callback used to format each field value, possibly recursively.
      * @return string
      */
-    private function formatMultiColumnField(array $values, array $data, callable $callback = null): string
+    private function formatMultiColumnField(array $values, array $data, ?callable $callback = null): string
     {
         $formatted = '';
 

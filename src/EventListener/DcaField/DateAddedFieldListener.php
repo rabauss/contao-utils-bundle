@@ -29,7 +29,7 @@ class DateAddedFieldListener extends AbstractDcaFieldListener
         $GLOBALS['TL_DCA'][$table]['fields']['dateAdded'] = $field;
     }
 
-    public function onLoadCallback(DataContainer $dc = null): void
+    public function onLoadCallback(?DataContainer $dc = null): void
     {
         if (!$dc || !$dc->id) {
             return;

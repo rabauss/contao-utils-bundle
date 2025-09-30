@@ -148,7 +148,7 @@ class ContainerUtil implements ServiceSubscriberInterface
     /**
      * Return if currently in maintenance mode.
      */
-    public function isMaintenanceModeActive(PageModel $page = null): bool
+    public function isMaintenanceModeActive(?PageModel $page = null): bool
     {
         if ($page && $page->maintenanceMode) {
             return true;

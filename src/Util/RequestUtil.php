@@ -58,7 +58,7 @@ class RequestUtil
      *
      * @return PageModel|null the root page model or null if not exist
      */
-    public function getCurrentRootPageModel(PageModel $currentPage = null): ?PageModel
+    public function getCurrentRootPageModel(?PageModel $currentPage = null): ?PageModel
     {
         if (!$currentPage && !$currentPage = $this->getCurrentPageModel()) {
             return $currentPage;
@@ -125,7 +125,7 @@ class RequestUtil
      * Return true if the current page (or the passed page) is the index/ start page
      * of the current page tree.
      */
-    public function isIndexPage(PageModel $pageModel = null): bool
+    public function isIndexPage(?PageModel $pageModel = null): bool
     {
         if (!$pageModel) {
             $pageModel = $this->getCurrentPageModel();

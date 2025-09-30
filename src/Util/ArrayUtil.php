@@ -49,7 +49,7 @@ class ArrayUtil
      * @deprecated Use {@see StaticArrayUtil::insertAfterKey() SUtil::array()->insertAfterKey(...)} instead.
      *             Beware: The option keys have changed!
      */
-    public function insertAfterKey(array &$array, string $key, mixed $value, string $newKey = null, array $options = []): void
+    public function insertAfterKey(array &$array, string $key, mixed $value, ?string $newKey = null, array $options = []): void
     {
         $options['attachMissingKey'] ??= $options['attachIfKeyNotExist'] ?? true;
 

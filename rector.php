@@ -12,8 +12,8 @@ use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRect
 return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/src',
-
     ])
+    ->withPhpVersion(\Rector\ValueObject\PhpVersion::PHP_84)
     ->withRules([
         AddVoidReturnTypeWhereNoReturnRector::class,
         # In Vorbereitung für PHP 8.4:
