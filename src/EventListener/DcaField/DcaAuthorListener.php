@@ -6,9 +6,11 @@ use Contao\BackendUser;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\DataContainer;
 use Contao\FrontendUser;
+use Contao\Model;
 use HeimrichHannot\UtilsBundle\Dca\AuthorField;
 use HeimrichHannot\UtilsBundle\Dca\AuthorFieldConfiguration;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class DcaAuthorListener extends AbstractDcaFieldListener
 {
@@ -24,17 +26,33 @@ class DcaAuthorListener extends AbstractDcaFieldListener
         $authorField = $this->createAuthorField($options);
 
         $GLOBALS['TL_DCA'][$table]['fields'][$authorFieldName] = $authorField;
+        $GLOBALS['TL_DCA'][$table]['config']['oncreate_callback'][] = [self::class, 'onConfigCreateCallback'];
         $GLOBALS['TL_DCA'][$table]['config']['oncopy_callback'][] = [self::class, 'onConfigCopyCallback'];
     }
 
+    public function onConfigCreateCallback(string $table, int $id, array $row, DataContainer $dc): void
+    {
+        $option = AuthorField::getRegistrations()[$dc->table] ?? null;
+        $model = $this->getModelInstance($table, $id);
+        if (!$model || !$option) {
+            return;
+        }
 
+        /** @var TokenStorageInterface $tokenStorage */
+        $tokenStorage = $this->container->get('token_storage');
+        $user = $tokenStorage->getToken()?->getUser();
+        if (!$user) {
+            return;
+        }
+
+        $this->setAuthor($option, $user, $model);
+        $model->save();
+    }
     public function onConfigCopyCallback(int $insertId, DataContainer $dc): void
     {
         $options = AuthorField::getRegistrations()[$dc->table];
-        $authorFieldName = $this->getAuthorFieldName($options);
-
         $model = $this->getModelInstance($dc->table, $insertId);
-        if (!$model) {
+        if (!$model || !$options) {
             return;
         }
 
@@ -42,17 +60,7 @@ class DcaAuthorListener extends AbstractDcaFieldListener
         $tokenStorage = $this->container->get('token_storage');
         $user = $tokenStorage->getToken()?->getUser();
 
-        $model->{$authorFieldName} = 0;
-
-        if (AuthorField::TYPE_USER === $options->getType()) {
-            if ($user instanceof BackendUser) {
-                $model->{$authorFieldName} = $user->id;
-            }
-        } elseif (AuthorField::TYPE_MEMBER === $options->getType()) {
-            if ($user instanceof FrontendUser) {
-                $model->{$authorFieldName} = $user->id;
-            }
-        }
+        $this->setAuthor($options, $user, $model);
         $model->save();
     }
 
@@ -81,10 +89,6 @@ class DcaAuthorListener extends AbstractDcaFieldListener
 
     public function createAuthorField(AuthorFieldConfiguration $options): array
     {
-        /** @var TokenStorageInterface $tokenStorage */
-        $tokenStorage = $this->container->get('token_storage');
-        $user = $tokenStorage->getToken()?->getUser();
-
         $authorField = [
             'inputType' => 'select',
             'eval' => [
@@ -105,18 +109,27 @@ class DcaAuthorListener extends AbstractDcaFieldListener
 
         $authorField['default'] = 0;
         if (AuthorField::TYPE_USER === $options->getType()) {
-            if ($user instanceof BackendUser) {
-                $authorField['default'] = $user->id;
-            }
             $authorField['foreignKey'] = 'tl_user.name';
             $authorField['relation'] = ['type' => 'hasOne', 'load' => 'lazy'];
         } elseif (AuthorField::TYPE_MEMBER === $options->getType()) {
-            if ($user instanceof FrontendUser) {
-                $authorField['default'] = $user->id;
-            }
             $authorField['foreignKey'] = "tl_member.CONCAT(firstname,' ',lastname)";
             $authorField['relation'] = ['type' => 'hasOne', 'load' => 'lazy'];
         }
         return $authorField;
+    }
+
+    private function setAuthor(AuthorFieldConfiguration $options, ?UserInterface $user, Model $model): void
+    {
+        $authorFieldName = $this->getAuthorFieldName($options);
+        $model->{$authorFieldName} = 0;
+        if (AuthorField::TYPE_USER === $options->getType()) {
+            if ($user instanceof BackendUser) {
+                $model->{$authorFieldName} = $user->id;
+            }
+        } elseif (AuthorField::TYPE_MEMBER === $options->getType()) {
+            if ($user instanceof FrontendUser) {
+                $model->{$authorFieldName} = $user->id;
+            }
+        }
     }
 }

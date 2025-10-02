@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.9.4] - 2025-10-02
+- Fixed: issue with author field default value in some cases
+
 ## [3.9.3] - 2025-09-30
 - Fixed: implicitly nullable parameter deprecated errors
 
