@@ -186,15 +186,6 @@ class EntityFinderCommand extends Command
                 }
 
                 return 'Theme not found: ID '.$id;
-
-            case PageModel::getTable():
-                $page = PageModel::findByPk($id);
-
-                if ($page) {
-                    return '<options=bold>Page: '.$page->title.'</> (ID: '.$page->id.', Type: '.$page->type.', DNS: '.$page->getFrontendUrl().' )';
-                }
-
-                return 'Page not found: ID '.$id;
         }
 
         $element = $this->finder->find($table, $id);

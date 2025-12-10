@@ -10,11 +10,13 @@ use Contao\LayoutModel;
 use Contao\ModuleModel;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
+use Contao\PageModel;
 use Contao\ThemeModel;
 use Doctrine\DBAL\Connection;
 use HeimrichHannot\Blocks\BlockModel;
 use HeimrichHannot\Blocks\BlockModuleModel;
 use HeimrichHannot\UtilsBundle\Event\EntityFinderFindEvent;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use function Symfony\Component\String\u;
 
@@ -327,6 +329,33 @@ class Finder
             'List config element ' . $model->title . ' (ID: ' . $model->id . ')',
             (function () use ($model): \Iterator {
                 yield ['table' => 'tl_list_config', 'id' => $model->pid];
+            })()
+        );
+    }
+
+    private function page(int $id): ?Element
+    {
+        /** @var PageModel|null $model */
+        $model = $this->helper->fetchModelOrData(PageModel::getTable(), $id);
+        if (null === $model) {
+            return null;
+        }
+
+        try {
+            $path = $model->getFrontendUrl();
+        } catch (InvalidParameterException) {
+            $model->loadDetails();
+            $path = ($model->rootUseSSL ? 'https' : 'http') . '://' . $model->domain . '/' . $model->alias;
+        }
+
+        return new Element(
+            $model->id,
+            PageModel::getTable(),
+            'Page ' . $model->title . ' (ID: ' . $model->id . ', Type: ' . $model->type . ', DNS: ' . $path . ')',
+            (function () use ($model): \Iterator {
+                if ($model->pid > 0) {
+                    yield ['table' => PageModel::getTable(), 'id' => $model->pid];
+                }
             })()
         );
     }
