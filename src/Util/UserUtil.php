@@ -85,7 +85,7 @@ class UserUtil
             $groupTable = 'tl_user_group';
         }
 
-        $columns = [$groupTable.'.id IN('.implode(',', array_map('\intval', $groups)).')'];
+        $columns = [$groupTable.'.id IN('.implode(',', array_map(\intval(...), $groups)).')'];
 
         $this->modelUtil->addPublishedCheckToModelArrays($groupTable, $columns, [
             'publishedField' => 'disable',

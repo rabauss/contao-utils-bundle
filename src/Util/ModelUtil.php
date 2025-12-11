@@ -99,7 +99,7 @@ class ModelUtil
         }
 
         if (is_array($values) && !$options['skipReplaceInsertTags']) {
-            $values = array_map(fn($value) => $this->insertTagParser->replace($value), $values);
+            $values = array_map($this->insertTagParser->replace(...), $values);
         }
 
         if (empty($columns)) {
@@ -159,7 +159,7 @@ class ModelUtil
         }
 
         if (is_array($values) && !$options['skipReplaceInsertTags']) {
-            $values = array_map(fn($value) => $this->insertTagParser->replace($value), $values);
+            $values = array_map($this->insertTagParser->replace(...), $values);
         }
 
         if (empty($columns)) {
@@ -184,7 +184,7 @@ class ModelUtil
         }
 
         /** @var Adapter<Model> $adapter */
-        return $adapter->findBy(["$table.id IN(".implode(',', array_map('\intval', $ids)).')'], null, $options);
+        return $adapter->findBy(["$table.id IN(".implode(',', array_map(\intval(...), $ids)).')'], null, $options);
     }
 
     /**
