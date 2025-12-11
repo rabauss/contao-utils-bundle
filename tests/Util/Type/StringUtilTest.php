@@ -90,7 +90,7 @@ class StringUtilTest extends ContaoTestCase
         $instance->random(true, ['randomNumberGenerator' => function ($min, $max) { return 10; }]);
     }
 
-    public function providerTruncateHtml()
+    public static function providerTruncateHtml()
     {
         return [
             [

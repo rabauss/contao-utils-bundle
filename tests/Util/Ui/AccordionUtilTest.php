@@ -26,7 +26,7 @@ class AccordionUtilTest extends AbstractUtilsTestCase
         return new AccordionUtil($framework);
     }
 
-    public function structureAccordionStartStopProvider()
+    public static function structureAccordionStartStopProvider()
     {
         return [
             // Empty (pid=1)

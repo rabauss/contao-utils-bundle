@@ -28,7 +28,7 @@ class LocaleUtilTest extends ContaoTestCase
         $this->assertSame($expected, $instance->ensureLineBreaks($text, $language));
     }
 
-    public function providerEncoreLineBreaks()
+    public static function providerEncoreLineBreaks()
     {
         return [
             ['Hello World!', 'Hello World!', 'en'],

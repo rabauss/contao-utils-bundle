@@ -24,7 +24,7 @@ class UrlUtilTest extends AbstractUtilsTestCase
         return new UrlUtil($requestStack);
     }
 
-    public function removeQueryStringProvider()
+    public static function removeQueryStringProvider()
     {
         return [
             ['https://example.com', '', 'https://example.com'],
@@ -56,7 +56,7 @@ class UrlUtilTest extends AbstractUtilsTestCase
         $this->assertSame($result, $instance->removeQueryStringParameterFromUrl($parameter));
     }
 
-    public function addQueryStringParameterProvider()
+    public static function addQueryStringParameterProvider()
     {
         return [
             ['https://example.com', '', 'https://example.com'],

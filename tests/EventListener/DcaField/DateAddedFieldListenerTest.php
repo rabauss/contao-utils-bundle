@@ -45,7 +45,7 @@ class DateAddedFieldListenerTest extends TestCase
         $this->assertArrayHasKey('dateAdded', $GLOBALS['TL_DCA'][$table]['fields']);
     }
 
-    public function dateAddedConfig():array
+    public static function dateAddedConfig():array
     {
         return [
             [null, false, false, false, false, null],
@@ -123,25 +123,19 @@ class DateAddedFieldListenerTest extends TestCase
     {
         // Without DataContainer
 
-        $listener = $this->getMockBuilder(DateAddedFieldListener::class)
-            ->setConstructorArgs([$this->createMock(ContainerInterface::class)])
-            ->onlyMethods(['getModelInstance'])
-            ->getMock();
-
-        $listener->expects($this->never())->method('getModelInstance');
+        $container = $this->createMock(ContainerInterface::class);
+        $listener = new DateAddedFieldListener($container);
 
         $listener->onLoadCallback();
 
         // With DataContainer, but no model instance
 
         $listener = $this->getMockBuilder(DateAddedFieldListener::class)
-            ->setConstructorArgs([$this->createMock(ContainerInterface::class)])
+            ->setConstructorArgs([$container])
             ->onlyMethods(['getModelInstance'])
             ->getMock();
 
-        $dc = $this->getMockBuilder(DataContainer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $dc = $this->createMock(DataContainer::class);
 
         $dc->id = 1;
         $dc->method('__get')->willReturnCallback(function ($name) {
@@ -161,7 +155,7 @@ class DateAddedFieldListenerTest extends TestCase
         // Complete run
 
         $listener = $this->getMockBuilder(DateAddedFieldListener::class)
-            ->setConstructorArgs([$this->createMock(ContainerInterface::class)])
+            ->setConstructorArgs([$container])
             ->onlyMethods(['getModelInstance'])
             ->getMock();
 
@@ -178,14 +172,13 @@ class DateAddedFieldListenerTest extends TestCase
 
     public function testOnCopyCallback()
     {
+        $container = $this->createMock(ContainerInterface::class);
         $listener = $this->getMockBuilder(DateAddedFieldListener::class)
-            ->setConstructorArgs([$this->createMock(ContainerInterface::class)])
+            ->setConstructorArgs([$container])
             ->onlyMethods(['getModelInstance'])
             ->getMock();
 
-        $dc = $this->getMockBuilder(DataContainer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $dc = $this->createMock(DataContainer::class);
 
         $dc->method('__get')->willReturnCallback(function ($name) {
             switch ($name) {
@@ -201,9 +194,7 @@ class DateAddedFieldListenerTest extends TestCase
 
         // Run without model
 
-        $dc = $this->getMockBuilder(DataContainer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $dc = $this->createMock(DataContainer::class);
 
         $dc->method('__get')->willReturnCallback(function ($name) {
             switch ($name) {
@@ -215,7 +206,7 @@ class DateAddedFieldListenerTest extends TestCase
         });
 
         $listener = $this->getMockBuilder(DateAddedFieldListener::class)
-            ->setConstructorArgs([$this->createMock(ContainerInterface::class)])
+            ->setConstructorArgs([$container])
             ->onlyMethods(['getModelInstance'])
             ->getMock();
 
@@ -226,13 +217,11 @@ class DateAddedFieldListenerTest extends TestCase
         // Complete run
 
         $listener = $this->getMockBuilder(DateAddedFieldListener::class)
-            ->setConstructorArgs([$this->createMock(ContainerInterface::class)])
+            ->setConstructorArgs([$container])
             ->onlyMethods(['getModelInstance'])
             ->getMock();
 
-        $dc = $this->getMockBuilder(DataContainer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $dc = $this->createMock(DataContainer::class);
 
         $dc->method('__get')->willReturnCallback(function ($name) {
             switch ($name) {
