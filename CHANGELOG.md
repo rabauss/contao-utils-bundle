@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.9.5] - 2025-12-11
+- Fixed: exception in entity finder with pages that need item
+
 ## [3.9.4] - 2025-10-02
 - Fixed: issue with author field default value in some cases
 
